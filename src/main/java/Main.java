@@ -4,8 +4,9 @@ import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.followers.EncoderFollower;
 import jaci.pathfinder.modifiers.TankModifier;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
-import java.nio.file.Path;
 
 /**
  * Created by Benjamin Ward on 11/24/2016.
@@ -25,6 +26,20 @@ public class Main {
     static Trajectory trajectory;
 
     public static void main(String[] args) {
+
+        try
+        {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (UnsupportedLookAndFeelException|ClassNotFoundException|InstantiationException|IllegalAccessException e) {}
+
+        JFrame frame = new JFrame("MainForm");
+        frame.setContentPane(new MainForm().WaypointEditor);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+
+        /*
         Waypoint[] points = new Waypoint[] {
                 new Waypoint(-4, -1, Pathfinder.d2r(-45)),      // Waypoint @ x=-4, y=-1, exit angle=-45 degrees
                 new Waypoint(-2, -2, 0),                        // Waypoint @ x=-2, y=-2, exit angle=0 radians
@@ -36,7 +51,7 @@ public class Main {
         trajectory = Pathfinder.generate(points, config);
 
         File file = new File("output.csv");
-        Pathfinder.writeToCSV(file, trajectory);
+        Pathfinder.writeToCSV(file, trajectory);*/
     }
 
     public static void initialize()
