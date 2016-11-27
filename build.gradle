@@ -12,4 +12,6 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile files('lib/Pathfinder-Java.jar')
+    compile files('lib/jfreechart-1.0.19.jar')
+    compile files('lib/jcommon-1.0.23.jar')
 }

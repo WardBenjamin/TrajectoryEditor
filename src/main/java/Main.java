@@ -33,7 +33,7 @@ public class Main {
         }
         catch (UnsupportedLookAndFeelException|ClassNotFoundException|InstantiationException|IllegalAccessException e) {}
 
-        JFrame frame = new JFrame("MainForm");
+        JFrame frame = new JFrame("Path Editor");
         frame.setContentPane(new MainForm().WaypointEditor);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
