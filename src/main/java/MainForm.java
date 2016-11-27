@@ -1,3 +1,5 @@
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
@@ -10,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -69,7 +72,7 @@ public class MainForm {
         try {
             double x = Double.valueOf(this.textField_xInput.getText());
             double y = Double.valueOf(this.textField_yInput.getText());
-            double exitAngle = Double.valueOf(this.textField_exitAngleInput.getText());
+            double exitAngle = Pathfinder.d2r(Double.valueOf(this.textField_exitAngleInput.getText()));
 
             Waypoint waypoint = new Waypoint(x, y, exitAngle);
             waypoints.add(waypoint);
@@ -94,15 +97,43 @@ public class MainForm {
     }
 
     private void action_graph(ActionEvent evt) {
+        Trajectory trajectory = finalizeTrajectory();
+
+        if(trajectory == null) {
+            return;
+        }
+
         XYSeriesCollection collection = new XYSeriesCollection();
         XYSeries series = new XYSeries("robot");
 
-        /* Populate values here */
+        for (int i = 0; i < trajectory.segments.length; i++)
+        {
+            Trajectory.Segment segment = trajectory.segments[i];
+            series.add(segment.x, segment.y);
+        }
 
         JFreeChart chart = ChartFactory.createScatterPlot("Robot", "X", "Y",
                 collection, PlotOrientation.VERTICAL, true, true, false);
-
+        chartFrame = new ChartFrame("Robot", chart);
+        chartFrame.pack();
+        chartFrame.setVisible(true);
     }
 
     private void action_export(ActionEvent evt) {}
+
+    private Trajectory finalizeTrajectory()
+    {
+        double max_velocity = 1.7, max_acceleration = 2.0, max_jerk = 60.0;
+        Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC,
+                Trajectory.Config.SAMPLES_HIGH, 0.05, max_velocity, max_acceleration, max_jerk); // Delta time 0.05 = 1/20
+        Waypoint[] array = new Waypoint[waypoints.size()];
+
+        if(waypoints.size() > 0) {
+            System.out.println("Finalized trajectory with " + array.length + " waypoints!");
+            return Pathfinder.generate(waypoints.toArray(array), config);
+        }
+
+        System.out.println("Failed to finalize trajectory because it had zero elements!");
+        return null;
+    }
 }
