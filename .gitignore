@@ -4,4 +4,6 @@
 build
 build/
 build/*
-
+.gradle
+,gradle/
+.gradle/*
