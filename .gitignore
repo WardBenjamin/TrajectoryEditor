@@ -7,3 +7,5 @@ build/*
 .gradle
 ,gradle/
 .gradle/*
+output.csv
+*output*.csv

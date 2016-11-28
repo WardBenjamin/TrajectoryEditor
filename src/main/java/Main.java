@@ -76,14 +76,15 @@ public class Main {
 
     public static void periodic()
     {
+        // Calculate motor outputs given current encoder positions
         double l = left.calculate(currentLeftEncoderPosition);
         double r = right.calculate(currentRightEncoderPosition);
 
-        double gyroHeading = gyroValueDegree;    // Assuming the gyro is giving a value in degrees
+        double currentHeading = gyroValueDegree;    // Assuming the gyro is giving a value in degrees
         double desiredHeading = Pathfinder.r2d(left.getHeading());  // Should also be in degrees
 
         double angleDifference
-                = Pathfinder.boundHalfDegrees(desiredHeading - gyroHeading); // Limits degree to -180, 180
+                = Pathfinder.boundHalfDegrees(desiredHeading - currentHeading); // Limits degree to -180, 180
         double turn = 0.8 * (-1.0/80.0) * angleDifference;
 
         setLeftMotors(l + turn);

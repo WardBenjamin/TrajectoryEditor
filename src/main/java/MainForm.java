@@ -67,8 +67,7 @@ public class MainForm {
         // TODO: place custom component creation code here
     }
 
-    private void action_create(ActionEvent evt)
-    {
+    private void action_create(ActionEvent evt) {
         try {
             double x = Double.valueOf(this.textField_xInput.getText());
             double y = Double.valueOf(this.textField_yInput.getText());
@@ -79,8 +78,8 @@ public class MainForm {
 
             System.out.println("Number of Waypoints: " + waypoints.size());
 
-                this.textArea_waypointBox.setText(this.textArea_waypointBox.getText()
-                        + "X: " + x + "  Y: " + y + "   A: " + exitAngle + " WAYPOINT: " + waypoints.size() + "\n");
+            this.textArea_waypointBox.setText(this.textArea_waypointBox.getText()
+                    + "X: " + x + "  Y: " + y + "   A: " + exitAngle + " WAYPOINT: " + waypoints.size() + "\n");
 
 
         } catch (NullPointerException | NumberFormatException e) {
@@ -89,7 +88,7 @@ public class MainForm {
     }
 
     private void action_reset(ActionEvent evt) {
-        if(chartFrame != null)
+        if (chartFrame != null)
             chartFrame.setVisible(false);
         waypoints = new ArrayList<>();
         textArea_waypointBox.setText("");
@@ -99,18 +98,20 @@ public class MainForm {
     private void action_graph(ActionEvent evt) {
         Trajectory trajectory = finalizeTrajectory();
 
-        if(trajectory == null) {
+        if (trajectory == null) {
             return;
         }
 
         XYSeriesCollection collection = new XYSeriesCollection();
         XYSeries series = new XYSeries("robot");
 
-        for (int i = 0; i < trajectory.segments.length; i++)
-        {
+        for (int i = 0; i < trajectory.segments.length; i++) {
             Trajectory.Segment segment = trajectory.segments[i];
             series.add(segment.x, segment.y);
+            System.out.println("X, Y: " + segment.x + ", " + segment.y);
         }
+
+        collection.addSeries(series);
 
         JFreeChart chart = ChartFactory.createScatterPlot("Robot", "X", "Y",
                 collection, PlotOrientation.VERTICAL, true, true, false);
@@ -119,16 +120,20 @@ public class MainForm {
         chartFrame.setVisible(true);
     }
 
-    private void action_export(ActionEvent evt) {}
+    private void action_export(ActionEvent evt) {
+        Trajectory trajectory = finalizeTrajectory();
+        String path = "." + File.separator + "output.csv";
+        System.out.println("Exporting trajectory to: " + path);
+        Pathfinder.writeToCSV(new File(path), trajectory);
+    }
 
-    private Trajectory finalizeTrajectory()
-    {
+    private Trajectory finalizeTrajectory() {
         double max_velocity = 1.7, max_acceleration = 2.0, max_jerk = 60.0;
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC,
                 Trajectory.Config.SAMPLES_HIGH, 0.05, max_velocity, max_acceleration, max_jerk); // Delta time 0.05 = 1/20
         Waypoint[] array = new Waypoint[waypoints.size()];
 
-        if(waypoints.size() > 0) {
+        if (waypoints.size() > 0) {
             System.out.println("Finalized trajectory with " + array.length + " waypoints!");
             return Pathfinder.generate(waypoints.toArray(array), config);
         }
