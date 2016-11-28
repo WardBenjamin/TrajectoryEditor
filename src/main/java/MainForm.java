@@ -204,7 +204,7 @@ public class MainForm {
                 System.out.println("Failed to finalize trajectory because settings are invalid or path not able to be constructed!");
             }
         }
-        else System.out.println("Failed to finalize trajectory because it had zero elements!");
+        else System.out.println("Failed to finalize trajectory because it had too few elements! (Needs >1)");
 
         return trajectory;
     }
