@@ -195,7 +195,7 @@ public class MainForm {
 
         Trajectory trajectory = null;
 
-        if (waypoints.size() > 0) {
+        if (waypoints.size() > 1) {
             System.out.println("Finalized trajectory with " + array.length + " waypoints!");
             try {
                 trajectory = Pathfinder.generate(waypoints.toArray(array), config);
