@@ -58,8 +58,8 @@ public class Main {
     {
         TankModifier modifier = new TankModifier(trajectory).modify(0.4064); // 16 in = .4064 m
 
-        left = new EncoderFollower(trajectory);
-        right = new EncoderFollower(trajectory);
+        left = new EncoderFollower(modifier.getLeftTrajectory());
+        right = new EncoderFollower(modifier.getRightTrajectory());
 
         left.configureEncoder(currentLeftEncoderPosition, encoderTicksPerRevolution, wheelDiameter);
         right.configureEncoder(currentRightEncoderPosition, encoderTicksPerRevolution, wheelDiameter);
